@@ -3,6 +3,7 @@ package com.jetpack.tip
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -13,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,7 +31,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Preview(showBackground = true)
+//@Preview(showBackground = true)
 @Composable
 fun RootView() {
     ContentView {
@@ -76,5 +78,22 @@ fun TopHeader(totalPerPerson: Double = 120.00) {
             )
         }
 
+    }
+}
+
+
+@Preview
+@Composable
+fun MainContent(){
+    Surface(
+        modifier = Modifier
+            .padding(2.dp)
+            .fillMaxWidth(),
+        shape = RoundedCornerShape(8.dp),
+        border = BorderStroke(width = 1.dp, color = Color.LightGray)
+    ) {
+        Column() {
+
+        }
     }
 }
