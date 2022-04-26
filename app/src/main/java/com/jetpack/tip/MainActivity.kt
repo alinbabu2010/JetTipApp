@@ -1,7 +1,6 @@
 package com.jetpack.tip
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
@@ -12,12 +11,8 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Remove
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,7 +28,8 @@ import com.jetpack.tip.components.TipPercentageSlider
 import com.jetpack.tip.components.TipRow
 import com.jetpack.tip.ui.theme.JetTipAppTheme
 import com.jetpack.tip.ui.theme.Purple100
-import com.jetpack.tip.widgets.RoundIconButton
+import com.jetpack.tip.utils.calculateTotalPerPerson
+import com.jetpack.tip.utils.calculateTotalTip
 
 @ExperimentalComposeUiApi
 class MainActivity : ComponentActivity() {
@@ -50,10 +46,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun RootView() {
     ContentView {
-        Column() {
-            TopHeader()
-            MainContent()
-        }
+        MainContent()
     }
 }
 
@@ -105,52 +98,84 @@ fun TopHeader(totalPerPerson: Double = 120.00) {
 //@Preview
 @Composable
 fun MainContent() {
-    BillForm {
-        Log.d("TAG", "MainContent: $it")
+    val tipAmountState = remember {
+        mutableStateOf(0.0)
     }
+    val totalPerPersonState = remember {
+        mutableStateOf(0.0)
+    }
+    val totalBillState = remember {
+        mutableStateOf("")
+    }
+    BillForm(tipAmountState, totalBillState, totalPerPersonState)
 }
 
 @ExperimentalComposeUiApi
 @Composable
-fun BillForm(onValChange: (String) -> Unit) {
-    val totalBillState = remember {
-        mutableStateOf("")
+fun BillForm(
+    tipAmountState: MutableState<Double>,
+    totalBillState: MutableState<String>,
+    totalPerPersonState: MutableState<Double>
+) {
+
+    val splitByState = remember {
+        mutableStateOf(1)
+    }
+    val tipPercentageState = remember {
+        mutableStateOf(0)
     }
     val validState = remember(totalBillState.value) {
         totalBillState.value.trim().isNotEmpty()
     }
     val keyboardController = LocalSoftwareKeyboardController.current
-    Surface(
-        modifier = Modifier
-            .padding(12.dp)
-            .fillMaxWidth(),
-        shape = RoundedCornerShape(8.dp),
-        border = BorderStroke(width = 1.dp, color = Color.LightGray)
-    ) {
-        Column(
-            modifier = Modifier.padding(4.dp),
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.Start
+    Column {
+        TopHeader(totalPerPersonState.value)
+        Surface(
+            modifier = Modifier
+                .padding(12.dp)
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(8.dp),
+            border = BorderStroke(width = 1.dp, color = Color.LightGray)
         ) {
-            InputField(
-                valueState = totalBillState,
-                labelId = "Enter Bill",
-                enabled = true,
-                isSingleLine = true,
-                onAction = KeyboardActions {
-                    if (!validState) return@KeyboardActions
-                    onValChange(totalBillState.value)
-                    keyboardController?.hide()
+            Column(
+                modifier = Modifier.padding(4.dp),
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.Start
+            ) {
+                InputField(
+                    valueState = totalBillState,
+                    labelId = "Enter Bill",
+                    enabled = true,
+                    isSingleLine = true,
+                    onAction = KeyboardActions {
+                        if (!validState) return@KeyboardActions
+                        keyboardController?.hide()
+                    }
+                )
+                if (validState) {
+                    SplitRow(splitByState) {
+                        tipAmountState.value =
+                            calculateTotalTip(tipPercentageState.value, totalBillState.value.toDouble())
+                        totalPerPersonState.value = calculateTotalPerPerson(
+                            splitByState.value,
+                            tipPercentageState.value,
+                            totalBillState.value.toDouble()
+                        )
+                    }
+                    TipRow(tipAmountState.value)
+                    TipPercentageSlider(tipPercentageState) {
+                        tipAmountState.value =
+                            calculateTotalTip(tipPercentageState.value, totalBillState.value.toDouble())
+                        totalPerPersonState.value = calculateTotalPerPerson(
+                            splitByState.value,
+                            tipPercentageState.value,
+                            totalBillState.value.toDouble()
+                        )
+                    }
+                } else {
+                    Box {}
                 }
-            )
-//            if (validState) {
-                SplitRow()
-                TipRow()
-                TipPercentageSlider()
-//            } else {
-//                Box() {}
-//            }
-
+            }
         }
     }
 }
