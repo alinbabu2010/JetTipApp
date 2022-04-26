@@ -99,18 +99,27 @@ fun TipRow() {
 }
 
 @Composable
-fun TipPercentageSlider(){
+fun TipPercentageSlider() {
     var sliderPositionState by remember {
         mutableStateOf(0f)
     }
-    Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(text = "$sliderPositionState%")
+    val tipPercentage = (sliderPositionState*100).toInt()
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(text = "$tipPercentage%")
         Spacer(modifier = Modifier.height(14.dp))
-        
+
         //Slider
         Slider(value = sliderPositionState, onValueChange = { newValue ->
             sliderPositionState = newValue
             Log.d("TAG", "TipPercentageSlider: $newValue")
-        })
+        },
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp),
+            steps = 5,
+            onValueChangeFinished = {
+
+            })
     }
 }
