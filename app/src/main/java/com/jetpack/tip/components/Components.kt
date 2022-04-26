@@ -28,7 +28,7 @@ fun InputField(
     enabled: Boolean,
     isSingleLine: Boolean,
     keyboardType: KeyboardType = KeyboardType.Number,
-    imeAction: ImeAction = ImeAction.Next,
+    imeAction: ImeAction = ImeAction.Done,
     onAction: KeyboardActions = KeyboardActions.Default
 ) {
 
@@ -38,7 +38,7 @@ fun InputField(
             valueState.value = it
         },
         modifier = modifier
-            .padding(top = 10.dp, start = 10.dp, end = 10.dp)
+            .padding(10.dp)
             .fillMaxWidth(),
         label = { Text(text = labelId) },
         leadingIcon = {
@@ -56,11 +56,10 @@ fun InputField(
 
 }
 
-
 @Composable
-fun SplitRow() {
-    var splitCount by remember {
-        mutableStateOf(1)
+fun SplitRow(splitByState: MutableState<Int>, onValueChanged: () -> Unit) {
+    var splitCount by remember(splitByState) {
+        splitByState
     }
     val splitRange = IntRange(0, 100)
     Row(
@@ -75,6 +74,7 @@ fun SplitRow() {
         ) {
             RoundIconButton(imageVector = Icons.Default.Remove, onClick = {
                 splitCount = if (splitCount > 1) splitCount - 1 else 1
+                onValueChanged()
             })
             Text(
                 text = splitCount.toString(),
@@ -84,42 +84,40 @@ fun SplitRow() {
             )
             RoundIconButton(imageVector = Icons.Default.Add, onClick = {
                 if (splitCount < splitRange.last) splitCount += 1
+                onValueChanged()
             })
         }
     }
 }
 
 @Composable
-fun TipRow() {
+fun TipRow(tipAmount : Double = 0.0) {
     Row(modifier = Modifier.padding(horizontal = 3.dp, vertical = 12.dp)) {
         Text(text = "Tip", modifier = Modifier.align(CenterVertically))
         Spacer(modifier = Modifier.width(200.dp))
-        Text(text = "$33.00", modifier = Modifier.align(CenterVertically))
+        Text(text = "$ $tipAmount", modifier = Modifier.align(CenterVertically))
     }
 }
 
 @Composable
-fun TipPercentageSlider() {
-    var sliderPositionState by remember {
+fun TipPercentageSlider(tipPercentageState: MutableState<Int>, onValueChanged: () -> Unit) {
+    var sliderPositionState by remember(tipPercentageState){
         mutableStateOf(0f)
     }
-    val tipPercentage = (sliderPositionState*100).toInt()
+    tipPercentageState.value = (sliderPositionState*100).toInt()
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "$tipPercentage%")
+        Text(text = "${tipPercentageState.value}%")
         Spacer(modifier = Modifier.height(14.dp))
 
         //Slider
         Slider(value = sliderPositionState, onValueChange = { newValue ->
             sliderPositionState = newValue
-            Log.d("TAG", "TipPercentageSlider: $newValue")
+            onValueChanged()
         },
             modifier = Modifier.padding(start = 16.dp, end = 16.dp),
-            steps = 5,
-            onValueChangeFinished = {
-
-            })
+            steps = 5)
     }
 }
