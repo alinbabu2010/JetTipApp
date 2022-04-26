@@ -1,6 +1,5 @@
-package com.jetpack.tip.components
+package com.jetpack.tip.ui.components
 
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -18,7 +17,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.jetpack.tip.widgets.RoundIconButton
+import com.jetpack.tip.ui.widgets.RoundIconButton
 
 @Composable
 fun InputField(

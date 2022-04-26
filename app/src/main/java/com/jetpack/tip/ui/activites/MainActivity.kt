@@ -1,4 +1,4 @@
-package com.jetpack.tip
+package com.jetpack.tip.ui.activites
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -25,13 +25,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.jetpack.tip.components.InputField
-import com.jetpack.tip.components.SplitRow
-import com.jetpack.tip.components.TipPercentageSlider
-import com.jetpack.tip.components.TipRow
+import com.jetpack.tip.ui.components.InputField
+import com.jetpack.tip.ui.components.SplitRow
+import com.jetpack.tip.ui.components.TipPercentageSlider
+import com.jetpack.tip.ui.components.TipRow
 import com.jetpack.tip.ui.theme.JetTipAppTheme
 import com.jetpack.tip.ui.theme.Purple100
 import com.jetpack.tip.utils.calculateAmount
+import com.jetpack.tip.R
 
 @ExperimentalComposeUiApi
 class MainActivity : ComponentActivity() {
