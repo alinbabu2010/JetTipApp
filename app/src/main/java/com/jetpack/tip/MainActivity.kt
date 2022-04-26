@@ -153,12 +153,15 @@ fun BillForm(
                         keyboardController?.hide()
                     }
                 )
-                if (validState) {
+                if (!validState) {
                     SplitRow(splitByState) {
+                        val totalBillAmount =
+                            if (totalBillState.value.isNotBlank()) totalBillState.value.toDouble()
+                            else 0.0
                         calculateAmount(
                             splitByState.value,
                             tipPercentageState.value,
-                            totalBillState.value.toDouble()
+                            totalBillAmount
                         ) { tipAmount, totalPerPerson ->
                             tipAmountState.value = tipAmount
                             totalPerPersonState.value = totalPerPerson
@@ -166,10 +169,13 @@ fun BillForm(
                     }
                     TipRow(tipAmountState.value)
                     TipPercentageSlider(tipPercentageState) {
+                        val totalBillAmount =
+                            if (totalBillState.value.isNotBlank()) totalBillState.value.toDouble()
+                            else 0.0
                         calculateAmount(
                             splitByState.value,
                             tipPercentageState.value,
-                            totalBillState.value.toDouble()
+                            totalBillAmount
                         ) { tipAmount, totalPerPerson ->
                             tipAmountState.value = tipAmount
                             totalPerPersonState.value = totalPerPerson
