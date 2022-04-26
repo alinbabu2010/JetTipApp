@@ -11,7 +11,10 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -28,8 +31,7 @@ import com.jetpack.tip.components.TipPercentageSlider
 import com.jetpack.tip.components.TipRow
 import com.jetpack.tip.ui.theme.JetTipAppTheme
 import com.jetpack.tip.ui.theme.Purple100
-import com.jetpack.tip.utils.calculateTotalPerPerson
-import com.jetpack.tip.utils.calculateTotalTip
+import com.jetpack.tip.utils.calculateAmount
 
 @ExperimentalComposeUiApi
 class MainActivity : ComponentActivity() {
@@ -95,7 +97,6 @@ fun TopHeader(totalPerPerson: Double = 120.00) {
 
 
 @ExperimentalComposeUiApi
-//@Preview
 @Composable
 fun MainContent() {
     val tipAmountState = remember {
@@ -154,23 +155,25 @@ fun BillForm(
                 )
                 if (validState) {
                     SplitRow(splitByState) {
-                        tipAmountState.value =
-                            calculateTotalTip(tipPercentageState.value, totalBillState.value.toDouble())
-                        totalPerPersonState.value = calculateTotalPerPerson(
+                        calculateAmount(
                             splitByState.value,
                             tipPercentageState.value,
                             totalBillState.value.toDouble()
-                        )
+                        ) { tipAmount, totalPerPerson ->
+                            tipAmountState.value = tipAmount
+                            totalPerPersonState.value = totalPerPerson
+                        }
                     }
                     TipRow(tipAmountState.value)
                     TipPercentageSlider(tipPercentageState) {
-                        tipAmountState.value =
-                            calculateTotalTip(tipPercentageState.value, totalBillState.value.toDouble())
-                        totalPerPersonState.value = calculateTotalPerPerson(
+                        calculateAmount(
                             splitByState.value,
                             tipPercentageState.value,
                             totalBillState.value.toDouble()
-                        )
+                        ) { tipAmount, totalPerPerson ->
+                            tipAmountState.value = tipAmount
+                            totalPerPersonState.value = totalPerPerson
+                        }
                     }
                 } else {
                     Box {}
