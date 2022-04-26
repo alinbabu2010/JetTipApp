@@ -62,6 +62,7 @@ fun SplitRow() {
     var splitCount by remember {
         mutableStateOf(1)
     }
+    val splitRange = IntRange(0, 100)
     Row(
         modifier = Modifier.padding(3.dp),
         horizontalArrangement = Arrangement.Start,
@@ -72,14 +73,18 @@ fun SplitRow() {
             modifier = Modifier.padding(horizontal = 3.dp),
             horizontalArrangement = Arrangement.End
         ) {
-            RoundIconButton(imageVector = Icons.Default.Remove, onClick = { splitCount -= 1 })
+            RoundIconButton(imageVector = Icons.Default.Remove, onClick = {
+                splitCount = if (splitCount > 1) splitCount - 1 else 1
+            })
             Text(
                 text = splitCount.toString(),
                 modifier = Modifier
                     .align(CenterVertically)
                     .padding(start = 9.dp, end = 9.dp)
             )
-            RoundIconButton(imageVector = Icons.Default.Add, onClick = { splitCount += 1 })
+            RoundIconButton(imageVector = Icons.Default.Add, onClick = {
+                if (splitCount < splitRange.last) splitCount += 1
+            })
         }
     }
 }
