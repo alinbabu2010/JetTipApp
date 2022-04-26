@@ -15,10 +15,9 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Remove
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,6 +28,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jetpack.tip.components.InputField
+import com.jetpack.tip.components.SplitRow
+import com.jetpack.tip.components.TipPercentageSlider
+import com.jetpack.tip.components.TipRow
 import com.jetpack.tip.ui.theme.JetTipAppTheme
 import com.jetpack.tip.ui.theme.Purple100
 import com.jetpack.tip.widgets.RoundIconButton
@@ -120,7 +122,7 @@ fun BillForm(onValChange: (String) -> Unit) {
         border = BorderStroke(width = 1.dp, color = Color.LightGray)
     ) {
         Column(
-            modifier = Modifier.padding(6.dp),
+            modifier = Modifier.padding(4.dp),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.Start
         ) {
@@ -135,24 +137,13 @@ fun BillForm(onValChange: (String) -> Unit) {
                     keyboardController?.hide()
                 }
             )
-            if (validState) {
-                Row(
-                    modifier = Modifier.padding(3.dp),
-                    horizontalArrangement = Arrangement.Start,
-                ) {
-                    Text(text = "Split", modifier = Modifier.align(Alignment.CenterVertically))
-                    Spacer(modifier = Modifier.width(120.dp))
-                    Row(
-                        modifier = Modifier.padding(horizontal = 3.dp),
-                        horizontalArrangement = Arrangement.End
-                    ) {
-                        RoundIconButton(imageVector = Icons.Default.Remove, onClick = { /*TODO*/ })
-                        RoundIconButton(imageVector = Icons.Default.Add, onClick = { /*TODO*/ })
-                    }
-                }
-            } else {
-                Box() {}
-            }
+//            if (validState) {
+                SplitRow()
+                TipRow()
+                TipPercentageSlider()
+//            } else {
+//                Box() {}
+//            }
 
         }
     }
