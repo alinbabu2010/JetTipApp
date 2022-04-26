@@ -35,6 +35,7 @@ import com.jetpack.tip.ui.theme.JetTipAppTheme
 import com.jetpack.tip.ui.theme.Purple100
 import com.jetpack.tip.widgets.RoundIconButton
 
+@ExperimentalComposeUiApi
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,11 +45,15 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-//@Preview(showBackground = true)
+@Preview(showBackground = true)
+@ExperimentalComposeUiApi
 @Composable
 fun RootView() {
     ContentView {
-        TopHeader()
+        Column() {
+            TopHeader()
+            MainContent()
+        }
     }
 }
 
@@ -71,6 +76,7 @@ fun TopHeader(totalPerPerson: Double = 120.00) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
+            .padding(16.dp)
             .height(150.dp)
             .clip(RoundedCornerShape(corner = CornerSize(12.dp))),
         color = Purple100
@@ -96,7 +102,7 @@ fun TopHeader(totalPerPerson: Double = 120.00) {
 
 
 @ExperimentalComposeUiApi
-@Preview
+//@Preview
 @Composable
 fun MainContent() {
     BillForm {
@@ -116,7 +122,7 @@ fun BillForm(onValChange: (String) -> Unit) {
     val keyboardController = LocalSoftwareKeyboardController.current
     Surface(
         modifier = Modifier
-            .padding(2.dp)
+            .padding(12.dp)
             .fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
         border = BorderStroke(width = 1.dp, color = Color.LightGray)
